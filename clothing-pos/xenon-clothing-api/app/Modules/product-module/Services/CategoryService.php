@@ -2,8 +2,11 @@
 
 namespace App\Modules\Product\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use App\Modules\Product\Models\Category;
+use App\Modules\Product\DTOs\CategoryDTO;
+use App\Modules\Product\Mappers\CategoryMapper;
+use PHPUnit\TestRunner\TestResult\Collector;
 
 class CategoryService
 {
@@ -14,33 +17,37 @@ class CategoryService
      */
     public function getAllCategories(): Collection
     {
-        return Category::all();
+        $categories = Category::all();
+        return $categories->map(function (Category $category) {
+            return CategoryMapper::toDTO($category);
+        });
     }
 
     /**
      * Create a new category.
      *
-     * @param array $data
+     * @param CategoryDTO $categoryDTO
      * @return Category
      */
-    public function createCategory(array $data): Category
+    public function createCategory(CategoryDTO $categoryDTO): CategoryDTO
     {
-        return Category::create($data);
+        return CategoryMapper::toDTO(Category::create(CategoryMapper::toModel($categoryDTO)));
     }
 
     /**
      * Update an existing category.
      *
      * @param int $id
-     * @param array $data
+     * @param CategoryDTO $categoryDTO
      * @return Category
      */
-    public function updateCategory(int $id, array $data): Category
+    public function updateCategory(int $id, CategoryDTO $categoryDTO): CategoryDTO
     {
         $category = Category::findOrFail($id);
-        $category->update($data);
 
-        return $category;
+        $category->update(CategoryMapper::toModel($categoryDTO));
+
+        return CategoryMapper::toDTO($category->fresh());
     }
 
     /**
@@ -49,9 +56,10 @@ class CategoryService
      * @param int $id
      * @return Category
      */
-    public function getCategoryById(int $id): Category
+    public function getCategoryById(int $id): CategoryDTO
     {
-        return Category::findOrFail($id);
+        $category = Category::findOrFail($id);
+        return CategoryMapper::toDTO($category);
     }
 
     /**

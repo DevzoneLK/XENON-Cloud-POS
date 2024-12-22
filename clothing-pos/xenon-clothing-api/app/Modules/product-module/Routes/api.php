@@ -23,7 +23,7 @@ Route::prefix('SizeGuide')->group(function () {
 
     Route::post('/addSizeGuide', [SizeGuideController::class, 'store']);
 
-    Route::post('/updateSizeGuide/{id}', [SizeGuideController::class, 'update']);
+    Route::put('/updateSizeGuide/{id}', [SizeGuideController::class, 'update']);
 
     Route::delete('/removeSizeGuide/{id}', [SizeGuideController::class, 'destroy']);
 
@@ -35,9 +35,9 @@ Route::prefix('Category')->group(function () {
 
     Route::post('/createCategory', [CategoryController::class, 'store']);
 
-    Route::post('/updateCategory/{id}', [CategoryController::class, 'update']);
+    Route::put('/updateCategory/{id}', [CategoryController::class, 'update']);
 
-    Route::delete('/getCategoryById/{id}', [CategoryController::class, 'show']);
+    Route::get('/getCategoryById/{id}', [CategoryController::class, 'show']);
 
     Route::delete('/deleteCategory/{id}', [CategoryController::class, 'destroy']);
 });

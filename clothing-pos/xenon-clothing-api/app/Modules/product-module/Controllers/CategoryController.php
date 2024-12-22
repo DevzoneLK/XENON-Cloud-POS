@@ -4,10 +4,9 @@ namespace App\Modules\Product\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\DTOs\Response\ResponseDTO;
 use App\Platform\Enums\StatusCode;
 use App\Modules\Product\DTOs\CategoryDTO;
-
+use App\Http\DTOs\Response\ResponseDTO;
 use App\Modules\Product\Services\CategoryService;
 
 class CategoryController extends Controller
@@ -23,24 +22,15 @@ class CategoryController extends Controller
     public function index()
     {
         try {
-            $categories = $this->categoryService->getAllCategories();
+            $categoryDTOs = $this->categoryService->getAllCategories();
 
-            $response = new ResponseDTO(
-                StatusCode::SUCCESS,
-                'Categories retrieved successfully.',
-                $categories->toArray()
-            );
+            $categories = $categoryDTOs->map(function (CategoryDTO $categoryDTO): array {
+                return $categoryDTO->toJsonResponse();
+            });
 
-            return $response->toJson();
-        } catch (\Exception $e) {
-            $response = new ResponseDTO(
-                StatusCode::INTERNAL_SERVER_ERROR,
-                'Failed to retrieve categories.',
-                [],
-                ['error' => $e->getMessage()]
-            );
-
-            return $response->toJson();
+            return $this->handleSuccessResponse($categories->toArray(), 'Categories retrieved successfully.');
+        } catch (\Exception $exception) {
+            return $this->handleFailedResponse($exception);
         }
     }
 
@@ -50,30 +40,16 @@ class CategoryController extends Controller
         try {
             $validatedData = $request->validate([
                 'name' => 'required|string|unique:category,name',
-                'is_enabled' => 'boolean',
+                'is-enabled' => 'boolean',
             ]);
 
-            $categoryDTO = new CategoryDTO($validatedData['name'], $validatedData['is_enabled']);
+            $categoryDTO = new CategoryDTO($validatedData);
 
-            // $category = $this->categoryService->createCategory($request->only(['name', 'is_enabled']));
-            $category = $this->categoryService->createCategory($categoryDTO);
+            $categoryResponseDTO = $this->categoryService->createCategory($categoryDTO);
 
-            $response = new ResponseDTO(
-                StatusCode::CREATED,
-                'Category created successfully.',
-                $category->toArray()
-            );
-
-            return $response->toJson();
-        } catch (\Exception $e) {
-            $response = new ResponseDTO(
-                StatusCode::BAD_REQUEST,
-                'Failed to create category.',
-                [],
-                ['error' => $e->getMessage()]
-            );
-
-            return $response->toJson();
+            return $this->handleSuccessResponse($categoryResponseDTO->toJsonResponse(), 'Category created successfully.', StatusCode::CREATED);
+        } catch (\Exception $exception) {
+            return $this->handleFailedResponse($exception, 'Failed to create category.');
         }
     }
 
@@ -81,29 +57,20 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $request->validate([
+            $validatedData = $request->validate([
                 'name' => 'string|unique:category,name,' . $id,
-                'is_enabled' => 'boolean',
+                'is-enabled' => 'boolean',
             ]);
 
-            $category = $this->categoryService->updateCategory($id, $request->only(['name', 'is_enabled']));
+            $categoryDTO = new CategoryDTO($validatedData);
 
-            $response = new ResponseDTO(
-                StatusCode::SUCCESS,
-                'Category updated successfully.',
-                $category->toArray()
-            );
+            $categoryResponseDTO = $this->categoryService->updateCategory($id, $categoryDTO);
 
-            return $response->toJson();
-        } catch (\Exception $e) {
-            $response = new ResponseDTO(
-                StatusCode::BAD_REQUEST,
-                'Failed to update category.',
-                [],
-                ['error' => $e->getMessage()]
-            );
+            return $this->handleSuccessResponse($categoryResponseDTO->toJsonResponse(), 'Category updated successfully.');
 
-            return $response->toJson();
+        } catch (\Exception $exception) {
+            return $this->handleFailedResponse($exception, 'Failed to update category.');
+
         }
     }
 
@@ -111,24 +78,11 @@ class CategoryController extends Controller
     public function show($id)
     {
         try {
-            $category = $this->categoryService->getCategoryById($id);
+            $categoryResponseDTO = $this->categoryService->getCategoryById($id);
 
-            $response = new ResponseDTO(
-                StatusCode::SUCCESS,
-                'Category retrieved successfully.',
-                $category->toArray()
-            );
-
-            return $response->toJson();
-        } catch (\Exception $e) {
-            $response = new ResponseDTO(
-                StatusCode::NOT_FOUND,
-                'Category not found.',
-                [],
-                ['error' => $e->getMessage()]
-            );
-
-            return $response->toJson();
+            return $this->handleSuccessResponse($$categoryResponseDTO->toJsonResponse(), 'Category retrieved successfully.');
+        } catch (\Exception $exception) {
+            return $this->handleFailedResponse($exception, 'Category not found.');
         }
     }
 
@@ -137,22 +91,9 @@ class CategoryController extends Controller
     {
         try {
             $this->categoryService->deleteCategory($id);
-
-            $response = new ResponseDTO(
-                StatusCode::SUCCESS,
-                'Category deleted successfully.'
-            );
-
-            return $response->toJson();
-        } catch (\Exception $e) {
-            $response = new ResponseDTO(
-                StatusCode::BAD_REQUEST,
-                'Failed to delete category.',
-                [],
-                ['error' => $e->getMessage()]
-            );
-
-            return $response->toJson();
+            return $this->handleSuccessResponse([], 'Category deleted successfully.');
+        } catch (\Exception $exception) {
+            return $this->handleFailedResponse($exception, 'Failed to delete category.');
         }
     }
 }
