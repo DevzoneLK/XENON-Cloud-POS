@@ -22,7 +22,6 @@ class ResponseDTO
         $this->additionalParams = app()->environment('development', 'test') ? ($additionalParams ?? []) : [];
         $this->timestamp = now();
         $this->setSuccessFlag($statusCode);
-        $this->data['environment'] = app()->environment();
     }
 
     public function toArray(): array
@@ -40,6 +39,7 @@ class ResponseDTO
             $debugUtility = new Debug();
             $response['debug-enabled'] = config('app.debug');
             if (config('app.debug')) {
+                $response['environment'] = app()->environment();
                 $response['configurations'] = $debugUtility->getDebugDatabaseConfig();
             }
         }
