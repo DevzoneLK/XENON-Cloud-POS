@@ -80,7 +80,7 @@ class CategoryController extends Controller
         try {
             $categoryResponseDTO = $this->categoryService->getCategoryById($id);
 
-            return $this->handleSuccessResponse($$categoryResponseDTO->toJsonResponse(), 'Category retrieved successfully.');
+            return $this->handleSuccessResponse($categoryResponseDTO->toJsonResponse(), 'Category retrieved successfully.');
         } catch (\Exception $exception) {
             return $this->handleFailedResponse($exception, 'Category not found.');
         }
