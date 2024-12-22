@@ -24,6 +24,20 @@ class CategoryService
     }
 
     /**
+     * Retrieve all categories by status.
+     *@param  $isEnabled
+     * @return Collection
+     */
+    public function getCategoriesByStatus(bool $isEnabled): Collection
+    {
+        $categories = Category::where('is_enabled', $isEnabled)->get();
+
+        return $categories->map(function (Category $category) {
+            return CategoryMapper::toDTO($category);
+        });
+    }
+
+    /**
      * Create a new category.
      *
      * @param CategoryDTO $categoryDTO

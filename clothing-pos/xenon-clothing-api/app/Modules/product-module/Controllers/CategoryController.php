@@ -34,6 +34,24 @@ class CategoryController extends Controller
         }
     }
 
+    // Fetch all categories by is-enabled status
+    public function getAllByEnableStatus(Request $request)
+    {
+        try {
+            $isEnabled = $request['is-enabled'] ?? true;
+
+            $categoryDTOs = $this->categoryService->getCategoriesByStatus($isEnabled);
+
+            $categories = $categoryDTOs->map(function (CategoryDTO $categoryDTO): array {
+                return $categoryDTO->toJsonResponse();
+            });
+
+            return $this->handleSuccessResponse($categories->toArray(), 'Categories retrieved successfully.');
+        } catch (\Exception $exception) {
+            return $this->handleFailedResponse($exception);
+        }
+    }
+
     // Store a new category
     public function store(Request $request)
     {

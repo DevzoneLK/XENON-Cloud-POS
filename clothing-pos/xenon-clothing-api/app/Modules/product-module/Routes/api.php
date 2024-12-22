@@ -33,6 +33,8 @@ Route::prefix('SizeGuide')->group(function () {
 Route::prefix('Category')->group(function () {
     Route::get('/getAllCategories', [CategoryController::class, 'index']);
 
+    Route::get('/getAllCategoriesByEnableStatus', [CategoryController::class, 'getAllByEnableStatus']);
+
     Route::post('/createCategory', [CategoryController::class, 'store']);
 
     Route::put('/updateCategory/{id}', [CategoryController::class, 'update']);
