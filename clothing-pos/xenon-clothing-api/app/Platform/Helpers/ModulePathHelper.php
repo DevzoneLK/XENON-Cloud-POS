@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utility\Helpers;
+namespace App\Platform\Helpers;
 
 use InvalidArgumentException;
 

@@ -30,7 +30,7 @@
             "App\\Modules\\Product\\": "app/Modules/product-module/"
         },
         "files": [
-            "app/utility/helpers/ModulePathHelper.php"
+            "app/platform/helpers/ModulePathHelper.php"
         ]
     },
     "autoload-dev": {
@@ -38,7 +38,7 @@
             "Tests\\": "tests/"
         },
         "files": [
-            "app/utility/helpers/ModulePathHelper.php"
+            "app/platform/helpers/ModulePathHelper.php"
         ]
     },
     "scripts": {

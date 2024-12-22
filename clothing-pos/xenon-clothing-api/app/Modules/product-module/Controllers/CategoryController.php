@@ -5,7 +5,8 @@ namespace App\Modules\Product\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\DTOs\Response\ResponseDTO;
-use App\Utility\Enums\StatusCode;
+use App\Platform\Enums\StatusCode;
+use App\Modules\Product\DTOs\CategoryDTO;
 
 use App\Modules\Product\Services\CategoryService;
 
@@ -47,12 +48,15 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
+            $validatedData = $request->validate([
                 'name' => 'required|string|unique:category,name',
                 'is_enabled' => 'boolean',
             ]);
 
-            $category = $this->categoryService->createCategory($request->only(['name', 'is_enabled']));
+            $categoryDTO = new CategoryDTO($validatedData['name'], $validatedData['is_enabled']);
+
+            // $category = $this->categoryService->createCategory($request->only(['name', 'is_enabled']));
+            $category = $this->categoryService->createCategory($categoryDTO);
 
             $response = new ResponseDTO(
                 StatusCode::CREATED,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utility\Enums;
+namespace App\Platform\Enums;
 
 enum StatusCode: int
 {

@@ -2,7 +2,8 @@
 
 namespace App\Http\DTOs\Response;
 
-use App\Utility\Enums\StatusCode;
+use App\Platform\Enums\StatusCode;
+use App\Platform\Utility\Debug;
 
 class ResponseDTO
 {
@@ -33,6 +34,15 @@ class ResponseDTO
             'data' => $this->data,
             'timestamp' => $this->timestamp,
         ];
+
+        // Include debug information in development or test environments
+        if (app()->environment('development', 'test')) {
+            $debugUtility = new Debug();
+            $response['debug-enabled'] = config('app.debug');
+            if (config('app.debug')) {
+                $response['configurations'] = $debugUtility->getDebugDatabaseConfig();
+            }
+        }
 
         // Merge additional parameters, allowing override or new keys
         return array_merge($response, $this->additionalParams);

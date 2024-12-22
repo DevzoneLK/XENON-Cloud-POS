@@ -4,7 +4,7 @@ namespace App\Modules\Product\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\DTOs\Response\ResponseDTO;
-use App\Utility\Enums\StatusCode;
+use App\Platform\Enums\StatusCode;
 
 use Illuminate\Http\Request;
 use App\Modules\Product\Services\ProductService;

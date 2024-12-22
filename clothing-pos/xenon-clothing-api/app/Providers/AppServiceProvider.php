@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Utility\Helpers\ModulePathHelper;
+use App\Platform\Helpers\ModulePathHelper;
 use Illuminate\Support\Str;
 class AppServiceProvider extends ServiceProvider
 {

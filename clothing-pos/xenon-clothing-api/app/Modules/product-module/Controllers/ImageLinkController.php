@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Product\Services\ProductImageService;
 use App\Http\DTOs\Response\ResponseDTO;
-use App\Utility\Enums\StatusCode;
+use App\Platform\Enums\StatusCode;
 
 class ImageLinkController extends Controller
 {

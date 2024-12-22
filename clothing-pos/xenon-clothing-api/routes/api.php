@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Utility\Helpers\ModulePathHelper;
+use App\Platform\Helpers\ModulePathHelper;
 use Illuminate\Support\Str;
 
 // Define API routes for users

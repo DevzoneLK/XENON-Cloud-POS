@@ -10,4 +10,5 @@ return [
     'enums' => app_path('Modules/{module_name}/Enums'),
     'routes' => app_path('Modules/{module_name}/Routes'),
     'dtos' => app_path('Modules/{module_name}/DTOs'),
+    'mappers' => app_path('Modules/{module_name}/Mappers'),
 ];

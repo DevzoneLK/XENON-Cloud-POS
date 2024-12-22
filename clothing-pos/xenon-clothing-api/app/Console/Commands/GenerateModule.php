@@ -88,6 +88,8 @@ class GenerateModule extends Command
             'Enums',
             'Models',
             'Routes',
+            'DTOs',
+            'Mappers',
         ];
 
         foreach ($subfolders as $folder) {
